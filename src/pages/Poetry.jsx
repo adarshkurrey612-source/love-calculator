@@ -26,25 +26,28 @@ const Poetry = () => {
 
     const handlePost = (e) => {
         e.preventDefault();
-        if (!newTitle.trim() || !newText.trim()) return;
+  publishPoem(newTitle, newText);   // 🔥 Firebase save
 
-        const newPoem = {
-            id: Date.now(),
-            title: newTitle,
-            text: newText,
-            likes: 0,
-            timestamp: Date.now(),
-            dateString: new Date().toLocaleDateString()
-        };
+  const newPoem = {
+    id: Date.now(),
+    title: newTitle,
+    text: newText,
+    timestamp: Date.now(),
+    likes: 0
+  };
 
-        const updatedPoems = [newPoem, ...poems];
-        setPoems(updatedPoems);
-        localStorage.setItem('community_poetry_v2', JSON.stringify(updatedPoems));
+  const updatedPoems = [newPoem, ...poems];
+  setPoems(updatedPoems);
 
-        setNewTitle('');
-        setNewText('');
-        // Keep author name for convenience
-    };
+  localStorage.setItem(
+    "community_poetry_v2",
+    JSON.stringify(updatedPoems)
+  );
+
+  setNewTitle("");
+  setNewText("");
+};
+
 
     const handleLike = (id) => {
         const updatedPoems = poems.map(p => p.id === id ? { ...p, likes: p.likes + 1 } : p);
