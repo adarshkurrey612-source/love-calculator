@@ -1,5 +1,5 @@
 import { db } from "../firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Feather, Heart, Send, UserCircle2, Type } from 'lucide-react';
@@ -11,18 +11,23 @@ const Poetry = () => {
 
     // Load poems and fade out those older than 1 week
     useEffect(() => {
-        const savedPoems = JSON.parse(localStorage.getItem('community_poetry_v2') || '[]');
-        const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
-        const now = Date.now();
+  const loadPoems = async () => {
+    const querySnapshot = await getDocs(collection(db, "poems"));
 
-        const validPoems = savedPoems.filter(poem => (now - poem.timestamp) < oneWeekInMs);
+    const poemsArray = [];
 
-        if (savedPoems.length !== validPoems.length) {
-            localStorage.setItem('community_poetry_v2', JSON.stringify(validPoems));
-        }
+    querySnapshot.forEach((doc) => {
+      poemsArray.push({
+        id: doc.id,
+        ...doc.data()
+      });
+    });
 
-        setPoems(validPoems);
-    }, []);
+    setPoems(poemsArray);
+  };
+
+  loadPoems();
+}, []);
 
     const handlePost = (e) => {
         e.preventDefault();
