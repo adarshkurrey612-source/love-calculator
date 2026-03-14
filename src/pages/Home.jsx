@@ -1,3 +1,5 @@
+import { db } from "../firebase";
+import { collection, addDoc } from "firebase/firestore";
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Calculator, Sparkles } from 'lucide-react';
@@ -8,7 +10,18 @@ const Home = () => {
     const [name2, setName2] = useState('');
     const [result, setResult] = useState(null);
     const [isCalculating, setIsCalculating] = useState(false);
-
+    const saveResult = async (name1, name2, percentage) => {
+  try {
+    await addDoc(collection(db, "loveHistory"), {
+      name1: name1,
+      name2: name2,
+      percentage: percentage,
+      date: new Date()
+    });
+  } catch (error) {
+    console.log("Error saving:", error);
+  }
+};
     const calculateLove = (e) => {
         e.preventDefault();
         if (!name1 || !name2) return;
@@ -27,6 +40,7 @@ const Home = () => {
             const percentage = (score % 60) + 40; // Base 40% to keep things positive!
 
             setResult(percentage);
+            saveResult(name1, name2, percentage);
             setIsCalculating(false);
 
             if (percentage > 80) {
