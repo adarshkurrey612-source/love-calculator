@@ -1,3 +1,5 @@
+import { db } from "../firebase";
+import { collection, addDoc } from "firebase/firestore";
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Feather, Heart, Send, UserCircle2, Type } from 'lucide-react';
@@ -49,7 +51,16 @@ const Poetry = () => {
         setPoems(updatedPoems);
         localStorage.setItem('community_poetry_v2', JSON.stringify(updatedPoems));
     };
+    const publishPoem = async (title, poem) => {
 
+  await addDoc(collection(db,"poems"),{
+    title: title,
+    poem: poem,
+    date: new Date(),
+    likes: 0
+  });
+
+};
     // Sort by likes descending for the "more likes on top" requirement
     const sortedPoems = [...poems].sort((a, b) => b.likes - a.likes);
 
