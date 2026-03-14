@@ -1,3 +1,4 @@
+import Admin from "./pages/Admin";
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -23,6 +24,7 @@ function App() {
           <Route path="/poetry" element={<Poetry />} />
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/history" element={<History />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </main>
     </div>
